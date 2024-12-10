@@ -2,7 +2,11 @@ import { Sparkles } from "lucide-react";
 import { Nunito } from "next/font/google";
 const nunito = Nunito({ subsets: ["latin"], weight: ["400", "700", "900"] });
 
-const Logo = ({ className }) => {
+type LogoProps = {
+  className?: string;
+};
+
+const Logo = ({ className }: LogoProps) => {
   return (
     <div
       className={`text-center text-[#ea90fb] tracking-tighter leading-[200%] text-3xl font-black ${nunito.className} ${className}`}

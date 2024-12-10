@@ -1,4 +1,14 @@
-const DifficultyButton = ({ difficulty, onClick }) => {
+import { Difficulty } from "../types/difficulty";
+
+type DifficultyButtonProps = {
+  difficulty: Difficulty | "ready";
+  onClick: () => void;
+};
+
+const DifficultyButton: React.FC<DifficultyButtonProps> = ({
+  difficulty,
+  onClick,
+}) => {
   const colorMap = {
     ready:
       "bg-[linear-gradient(90deg,#81cae3_0%,#81cae3_50%,#ea90fb_63%,#ffb6c1_87%,#ffdab9_100%)]",
