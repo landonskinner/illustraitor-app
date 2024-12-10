@@ -20,6 +20,8 @@ import { Difficulty } from "../types/difficulty";
 import { useCountdown } from "../utils/use-countdown";
 import InteractiveCanvasOverlay from "./canvas-overlay";
 import CanvasWrapper, { CanvasHeader } from "./canvas-wrapper";
+import Logo from "./logo";
+import { BadgeCheck, CircleCheck, Trash2 } from "lucide-react";
 
 const getCanvasContext = (canvasRef: React.RefObject<HTMLCanvasElement>) => {
   const canvas = canvasRef.current;
@@ -75,12 +77,13 @@ export default function Canvas() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (!time && !!score) {
-      const highScore = Number(window?.localStorage.getItem("highScore"));
-      if (highScore && score > highScore) {
+    if (!time) {
+      const highScore = Number(window?.localStorage.getItem("highScore")) || 0;
+      if (score > highScore) {
         window?.localStorage.setItem("highScore", String(score));
         setHighScore(score);
       }
+      setPrompt("");
     }
   }, [time]);
 
@@ -91,7 +94,6 @@ export default function Canvas() {
   const resetGame = () => {
     setGeneration(null);
     clearCanvas();
-    setPrompt(prompts[Math.floor(Math.random() * prompts.length)]);
   };
 
   const gameInProgress = showCanvas && !generation && !!time;
@@ -176,138 +178,160 @@ export default function Canvas() {
   };
 
   return (
-    <div className="m-auto w-full relative">
-      <section className="grid grid-rows-[48px_1fr_auto] max-w-[500px] gap-y-4 mx-auto">
-        <CanvasHeader>
-          {showCanvas ? (
-            <>
-              <div className="w-fit grid grid-cols-2 gap-x-4">
-                {!!highScore && (
-                  <>
-                    <div>High</div>
-                    <div className="font-bold">{highScore}</div>
-                  </>
-                )}
-                <div>Current</div>
-                <div className="font-bold">{score}</div>
-              </div>
-              <div className="text-center text-loading animate-border-loader uppercase font-bold text-3xl text-transparent">
-                {prompt}
-              </div>
-              <div className="text-3xl font-bold text-right">
-                {formatTime(time)}
-              </div>
-            </>
-          ) : (
-            // <div className="text-center text-3xl font-bold col-span-3">
-            //   AI Art Teacher
-            // </div>
-            <></>
-          )}
-        </CanvasHeader>
-        <CanvasWrapper>
-          {showCanvas ? (
-            <>
-              {(isLoading || !gameInProgress) && !!time && (
-                <InteractiveCanvasOverlay
-                  isLoading={isLoading}
-                  isInteractive={!!generation}
-                  onClick={resetGame}
-                >
-                  {generation ? (
-                    <div className="text-center">
-                      <div className="text-8xl">{generation.grade}</div>
-                      <div className="text-2xl">{generation.comment}</div>
-                      <div className="text-2xl">Click to draw again</div>
-                    </div>
-                  ) : (
-                    "Analyzing..."
-                  )}
-                </InteractiveCanvasOverlay>
+    <div className="m-auto w-full h-full relative flex">
+      <section className="grid basis-[500px] gap-y-4 m-auto grid-rows-[60px_1fr_60px]">
+        <Logo className={showCanvas ? "" : "opacity-0"} />
+        <div
+          className={`relative max-w-[500px] h-[500px] w-full bg-white shimmer-border rounded-2xl animate-border-loader shadow-lg shadow-[#e990fb46] ${
+            !!prompt ? "thick-border" : "overflow-hidden"
+          }`}
+          style={{
+            transitionProperty: "border-top-width",
+            transitionDuration: "1500ms",
+          }}
+        >
+          <div
+            className={`order-last px-4 grid grid-cols-[100px_1fr_100px] gap-x-4 jusify-between items-center text-white absolute w-full h-[100px] leading-[100px] -top-[100px] left-0 transition-opacity delay-1000 duration-300 ${
+              !!prompt ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            <div className="w-fit h-fit grid grid-cols-[1fr_auto] gap-x-4">
+              {!!highScore && (
+                <>
+                  <div>High</div>
+                  <div className="font-bold">{highScore}</div>
+                </>
               )}
-              {!time && (
-                <InteractiveCanvasOverlay
-                  isLoading={false}
-                  isInteractive={true}
-                  onClick={() => {
-                    resetTimer();
-                    resetGame();
-                    setScore(0);
-                    setShowCanvas(false);
-                  }}
-                >
-                  <div>
-                    Time&apos;s up! You&apos;ve received {score} passing grade
-                    {score === 1 ? "" : "s"}!
-                  </div>
-                </InteractiveCanvasOverlay>
-              )}
-              <canvas
-                className="cursor-crosshair w-full h-full"
-                ref={canvasRef}
-                onTouchStart={startDraw}
-                onTouchMove={drawing}
-                onTouchEnd={handleMouseUp}
-                onMouseDown={startDraw}
-                onMouseMove={drawing}
-                onMouseUp={handleMouseUp}
-              />
-            </>
-          ) : (
-            <IntroForm
-              showFirstStep={!highScore}
-              startGame={(difficulty: Difficulty) => {
-                setDifficulty(difficulty);
-                setPrompt(prompts[Math.floor(Math.random() * prompts.length)]);
-                setShowCanvas(true);
-              }}
-            />
-          )}
-        </CanvasWrapper>
-
-        {gameInProgress && (
-          <CanvasHeader>
-            <Button
-              className="h-full shadow-lg border-loading animate-border-loader"
-              id="clear-canvas"
-              variant="outline"
-              onClick={clearCanvas}
-            >
-              Clear
-            </Button>
-            <ArtistPalette drawStyle={drawStyle} setDrawStyle={setDrawStyle} />
-            <Button
-              className="save-img h-full shadow-lg"
-              onClick={async () => {
-                if (isRunning) toggleTimer();
-                setIsLoading(true);
-                const { canvas } = getCanvasContext(canvasRef);
-                if (canvas) {
-                  await fetch("/api/chat", {
-                    method: "POST",
-                    body: JSON.stringify({
-                      prompt,
-                      image: canvas.toDataURL("image/jpeg"),
-                    }),
-                  }).then((response) => {
-                    response.json().then((json) => {
-                      setGeneration({
-                        grade: json.grade,
-                        comment: json.comment,
-                      });
-                      setIsLoading(false);
-                      if (json.grade !== "F") {
-                        setScore(score + 1);
+              <div>Current</div>
+              <div className="font-bold">{score}</div>
+            </div>
+            <div className="font-black text-4xl uppercase text-center">
+              {prompt}
+            </div>
+            <div className="text-3xl font-bold text-right">
+              {formatTime(time)}
+            </div>
+          </div>
+          <div className="overflow-hidden h-full rounded-[20px]">
+            {showCanvas ? (
+              <>
+                {(isLoading || !gameInProgress) && !!time && (
+                  <InteractiveCanvasOverlay
+                    className="rounded-b-2xl"
+                    isLoading={isLoading}
+                    isInteractive={!!generation}
+                    onClick={() => {
+                      if (!!generation) {
+                        resetGame();
+                        setPrompt(
+                          prompts[Math.floor(Math.random() * prompts.length)]
+                        );
                       }
+                    }}
+                  >
+                    {generation ? (
+                      <div className="text-center">
+                        <div className="text-8xl">{generation.grade}</div>
+                        <div className="text-2xl">{generation.comment}</div>
+                        <div className="text-2xl">Click to draw again</div>
+                      </div>
+                    ) : (
+                      "Analyzing..."
+                    )}
+                  </InteractiveCanvasOverlay>
+                )}
+                {!time && (
+                  <InteractiveCanvasOverlay
+                    isLoading={false}
+                    isInteractive={true}
+                    onClick={() => {
+                      resetTimer();
+                      resetGame();
+                      setScore(0);
+                      setShowCanvas(false);
+                    }}
+                  >
+                    <div>
+                      Time&apos;s up! You&apos;ve received {score} passing grade
+                      {score === 1 ? "" : "s"}!
+                    </div>
+                  </InteractiveCanvasOverlay>
+                )}
+                <canvas
+                  className="cursor-crosshair w-full h-[400px]"
+                  ref={canvasRef}
+                  onTouchStart={startDraw}
+                  onTouchMove={drawing}
+                  onTouchEnd={handleMouseUp}
+                  onMouseDown={startDraw}
+                  onMouseMove={drawing}
+                  onMouseUp={handleMouseUp}
+                />
+              </>
+            ) : (
+              <IntroForm
+                showFirstStep={!highScore}
+                startGame={(difficulty: Difficulty) => {
+                  setDifficulty(difficulty);
+                  setPrompt(
+                    prompts[Math.floor(Math.random() * prompts.length)]
+                  );
+                  setShowCanvas(true);
+                }}
+              />
+            )}
+          </div>
+        </div>
+
+        <CanvasHeader>
+          {gameInProgress ? (
+            <>
+              <Button
+                className="group aspect-square hover:scale-105 transition-transform w-fit shadow-lg rounded-full shimmer-button backdrop-blur-lg animate-border-loader p-6 [&_svg]:size-6"
+                id="clear-canvas"
+                variant="outline"
+                onClick={clearCanvas}
+              >
+                <Trash2 className="icon-standby" stroke="currentColor" />
+              </Button>
+              <ArtistPalette
+                drawStyle={drawStyle}
+                setDrawStyle={setDrawStyle}
+              />
+              <Button
+                className="aspect-square hover:scale-105 transition-transform justify-self-end w-fit shadow-lg rounded-full shimmer-button backdrop-blur-lg animate-border-loader p-6 [&_svg]:size-6"
+                variant="outline"
+                onClick={async () => {
+                  if (isRunning) toggleTimer();
+                  setIsLoading(true);
+                  const { canvas } = getCanvasContext(canvasRef);
+                  if (canvas) {
+                    await fetch("/api/chat", {
+                      method: "POST",
+                      body: JSON.stringify({
+                        prompt,
+                        image: canvas.toDataURL("image/jpeg"),
+                      }),
+                    }).then((response) => {
+                      response.json().then((json) => {
+                        setGeneration({
+                          grade: json.grade,
+                          comment: json.comment,
+                        });
+                        setIsLoading(false);
+                        if (json.grade !== "F") {
+                          setScore(score + 1);
+                        }
+                      });
                     });
-                  });
-                }
-              }}
-            >
-              Submit
-            </Button>
-          </CanvasHeader>
-        )}
+                  }
+                }}
+              >
+                <BadgeCheck className="icon-standby" stroke="currentColor" />
+              </Button>
+            </>
+          ) : null}
+        </CanvasHeader>
       </section>
     </div>
   );

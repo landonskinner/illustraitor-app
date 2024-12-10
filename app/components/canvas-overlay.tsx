@@ -5,6 +5,7 @@ interface InteractiveCanvasOverlayProps {
   isInteractive: boolean;
   isLoading: boolean;
   onClick: () => void;
+  className?: string;
 }
 
 const InteractiveCanvasOverlay = ({
@@ -12,6 +13,7 @@ const InteractiveCanvasOverlay = ({
   isInteractive,
   isLoading,
   onClick,
+  className = "",
 }: InteractiveCanvasOverlayProps) => {
   return (
     <div
@@ -28,7 +30,7 @@ const InteractiveCanvasOverlay = ({
         !isInteractive
           ? "animate-shimmer hover:cursor-default"
           : "hover:cursor-pointer"
-      }`}
+      } ${className}`}
       style={{
         background: isLoading
           ? "linear-gradient(-45deg, rgba(231, 219, 247, 0.9) 25%, rgba(247, 219, 239, 0.9) 35%, rgba(247, 221, 219, 0.9) 40%, rgba(250,250,250,0.9) 50%, rgba(247, 221, 219, 0.9) 60%, rgba(247, 219, 239, 0.9) 65%, rgba(231, 219, 247, 0.9) 75%)"

@@ -15,6 +15,7 @@ export const COLORS = [
   "#808080",
   "#A9A9A9",
 ] as const;
+
 export type Color = (typeof COLORS)[number];
 export const SHAPES = ["rectangle", "circle", "triangle", "line"] as const;
 export type Shape = (typeof SHAPES)[number] | null;

@@ -17,12 +17,12 @@ import {
 import { COLORS, DrawStyle, SHAPES, TOOLS } from "@/app/types/drawing-styles";
 
 const IconMap = {
-  rectangle: <Square className="h-4 w-4" />,
-  circle: <Circle className="h-4 w-4" />,
-  triangle: <Triangle className="h-4 w-4" />,
-  line: <Minus className="h-4 w-4" />,
-  eraser: <Eraser className="h-4 w-4" />,
-  pencil: <Paintbrush className="h-4 w-4" />,
+  rectangle: <Square className="h-4 w-4 icon-standby" stroke="currentColor" />,
+  circle: <Circle className="h-4 w-4 icon-standby" stroke="currentColor" />,
+  triangle: <Triangle className="h-4 w-4 icon-standby" stroke="currentColor" />,
+  line: <Minus className="h-4 w-4 icon-standby" stroke="currentColor" />,
+  eraser: <Eraser className="h-4 w-4 icon-standby" stroke="currentColor" />,
+  pencil: <Paintbrush className="h-4 w-4 icon-standby" stroke="currentColor" />,
 };
 
 export function ArtistPalette({
@@ -38,7 +38,7 @@ export function ArtistPalette({
   });
 
   return (
-    <div className="border-loading animate-rainbow-wheel rounded-lg shadow-lg p-1 flex items-center space-x-1 w-fit mx-auto">
+    <div className="rounded-full shimmer-button backdrop-blur-lg animate-border-loader shadow-lg p-1 flex items-center space-x-1 w-fit mx-auto">
       <Popover
         open={popoverOpen.tool}
         onOpenChange={() =>
@@ -46,7 +46,10 @@ export function ArtistPalette({
         }
       >
         <PopoverTrigger asChild>
-          <Button variant="ghost" className="h-11 w-11">
+          <Button
+            variant="ghost"
+            className="h-11 w-11 rounded-full hover:bg-white/50 [&_svg]:size-6"
+          >
             {
               IconMap[
                 [...TOOLS, ...SHAPES].find(
@@ -95,7 +98,10 @@ export function ArtistPalette({
         }
       >
         <PopoverTrigger asChild>
-          <Button variant="ghost" className="w-11 h-11 p-0">
+          <Button
+            variant="ghost"
+            className="w-11 h-11 p-0 rounded-full hover:bg-white/50"
+          >
             <div
               style={{
                 backgroundColor: drawStyle.color,

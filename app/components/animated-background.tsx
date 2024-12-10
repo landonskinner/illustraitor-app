@@ -16,9 +16,9 @@ const AnimatedBackground = () => {
             values="0%;10%;0%"
             repeatCount="indefinite"
           ></animate>
-          <stop offset="0%" stop-color="rgba(255, 218, 185, 0.5)"></stop>
-          <stop offset="90%" stop-color="rgba(255, 182, 193, 0.1)"></stop>
-          <stop offset="100%" stop-color="rgba(255, 182, 193, 0)"></stop>
+          <stop offset="0%" stopColor="rgba(255, 218, 185, 0.5)"></stop>
+          <stop offset="90%" stopColor="rgba(255, 182, 193, 0.1)"></stop>
+          <stop offset="100%" stopColor="rgba(255, 182, 193, 0)"></stop>
         </radialGradient>
         <radialGradient
           id="Gradient2"
@@ -34,8 +34,8 @@ const AnimatedBackground = () => {
             values="0%;10%;0%"
             repeatCount="indefinite"
           ></animate>
-          <stop offset="0%" stop-color="rgba(129, 202, 227, 0.5)"></stop>
-          <stop offset="100%" stop-color="rgba(129, 202, 227, 0)"></stop>
+          <stop offset="0%" stopColor="rgba(129, 202, 227, 0.5)"></stop>
+          <stop offset="100%" stopColor="rgba(129, 202, 227, 0)"></stop>
         </radialGradient>
         <radialGradient
           id="Gradient3"
@@ -51,8 +51,8 @@ const AnimatedBackground = () => {
             values="0%;100%;0%"
             repeatCount="indefinite"
           ></animate>
-          <stop offset="0%" stop-color="rgba(234, 144, 251, 0.5)"></stop>
-          <stop offset="100%" stop-color="rgba(234, 144, 251, 0)"></stop>
+          <stop offset="0%" stopColor="rgba(234, 144, 251, 0.5)"></stop>
+          <stop offset="100%" stopColor="rgba(234, 144, 251, 0)"></stop>
         </radialGradient>
       </defs>
       <rect
