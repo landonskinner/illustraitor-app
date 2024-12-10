@@ -19,9 +19,9 @@ import IntroForm from "./intro-form";
 import { Difficulty } from "../types/difficulty";
 import { useCountdown } from "../utils/use-countdown";
 import InteractiveCanvasOverlay from "./canvas-overlay";
-import CanvasWrapper, { CanvasHeader } from "./canvas-wrapper";
+import { CanvasHeader } from "./canvas-wrapper";
 import Logo from "./logo";
-import { BadgeCheck, CircleCheck, Trash2 } from "lucide-react";
+import { BadgeCheck, Trash2 } from "lucide-react";
 
 const getCanvasContext = (canvasRef: React.RefObject<HTMLCanvasElement>) => {
   const canvas = canvasRef.current;

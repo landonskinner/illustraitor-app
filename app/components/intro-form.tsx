@@ -13,6 +13,7 @@ const IntroForm = ({
   const [currentStep, setCurrentStep] = useState(showFirstStep ? 0 : 2);
   const formSteps = [
     <div
+      key={0}
       tabIndex={0}
       onKeyDown={(e) => {
         if (e.key === "Enter") {
@@ -39,7 +40,7 @@ const IntroForm = ({
           accuracy to get the highest score!
         </p>
         <p className=" text-gray-700 text-sm sm:text-lg">
-          If you're ready, it's time to select your difficulty.
+          If you&apos;re ready, it&apos;s time to select your difficulty.
         </p>
       </div>
       <DifficultyButton
@@ -47,7 +48,7 @@ const IntroForm = ({
         onClick={() => setCurrentStep(currentStep + 1)}
       />
     </>,
-    DIFFICULTIES.map((difficulty, i) => {
+    DIFFICULTIES.map((difficulty) => {
       return (
         <DifficultyButton
           key={difficulty}
