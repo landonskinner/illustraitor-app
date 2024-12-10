@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 
+import { Syne } from "next/font/google";
+import AnimatedBackground from "./components/animated-background";
+
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -11,6 +14,12 @@ const geistMono = localFont({
   src: "./fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",
   weight: "100 900",
+});
+
+const syne = Syne({
+  weight: ["400", "700", "800"],
+  variable: "--font-syne",
+  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
@@ -26,8 +35,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`relative bg-[#e990fb27] ${geistSans.variable} ${geistMono.variable} ${syne.className} antialiased`}
       >
+        <AnimatedBackground />
         {children}
       </body>
     </html>

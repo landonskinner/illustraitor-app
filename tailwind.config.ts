@@ -12,6 +12,7 @@ export default {
       animation: {
         shimmer: "shimmer 1s infinite linear",
         "rainbow-wheel": "rainbow-wheel 60s infinite linear",
+        "border-loader": "border-loader 10s infinite linear",
       },
       colors: {
         background: "hsl(var(--background))",
@@ -55,6 +56,9 @@ export default {
           "5": "hsl(var(--chart-5))",
         },
       },
+      fontFamily: {
+        syne: "var(--font-syne)",
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
@@ -69,6 +73,11 @@ export default {
         shimmer: {
           "100%": {
             backgroundPositionX: "-50%",
+          },
+        },
+        "border-loader": {
+          "100%": {
+            backgroundPositionX: "50%",
           },
         },
       },

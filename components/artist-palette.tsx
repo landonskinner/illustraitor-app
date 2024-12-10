@@ -38,7 +38,7 @@ export function ArtistPalette({
   });
 
   return (
-    <div className="bg-white border border-gray-300 rounded-lg shadow-lg p-1 flex items-center space-x-1 w-fit mx-auto">
+    <div className="border-loading animate-rainbow-wheel rounded-lg shadow-lg p-1 flex items-center space-x-1 w-fit mx-auto">
       <Popover
         open={popoverOpen.tool}
         onOpenChange={() =>
