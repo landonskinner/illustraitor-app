@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 
-// const formatTime = (seconds: number) => {
-//   const minutes = Math.floor(seconds / 60);
-//   const remainingSeconds = seconds % 60;
-//   return `${minutes.toString()}:${remainingSeconds
-//     .toString()
-//     .padStart(2, "0")}`;
-// };
+const formatTime = (seconds: number) => {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  return `${minutes.toString()}:${remainingSeconds
+    .toString()
+    .padStart(2, "0")}`;
+};
 
 export const useCountdown = (initialTime: number) => {
   const [time, setTime] = useState(initialTime);
@@ -37,5 +37,11 @@ export const useCountdown = (initialTime: number) => {
     setTime(initialTime);
   };
 
-  return { time, toggleTimer, resetTimer, isRunning };
+  return {
+    formattedTime: formatTime(time),
+    time,
+    toggleTimer,
+    resetTimer,
+    isRunning,
+  };
 };

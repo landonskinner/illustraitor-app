@@ -1,3 +1,12 @@
+import {
+  Circle,
+  Eraser,
+  Minus,
+  Paintbrush,
+  Square,
+  Triangle,
+} from "lucide-react";
+
 export type Tool = (typeof TOOLS)[number] | null;
 export const TOOLS = ["pencil", "eraser"] as const;
 
@@ -24,4 +33,20 @@ export type DrawStyle = {
   brushWidth: number;
   color: Color;
   shape: Shape;
+};
+
+export const DEFAULT_DRAW_STYLE: DrawStyle = {
+  tool: "pencil",
+  brushWidth: 20,
+  color: COLORS[0],
+  shape: null,
+};
+
+export const ToolShapeIconMap = {
+  rectangle: Square,
+  circle: Circle,
+  triangle: Triangle,
+  line: Minus,
+  eraser: Eraser,
+  pencil: Paintbrush,
 };

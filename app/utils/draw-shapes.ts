@@ -1,4 +1,6 @@
-export const drawRect = ({
+import { Shape } from "../types/drawing-styles";
+
+const drawRect = ({
   ctx,
   pos,
   prevMouseX,
@@ -14,7 +16,7 @@ export const drawRect = ({
   ctx.fillRect(pos.x, pos.y, width, height);
 };
 
-export const drawCircle = ({
+const drawCircle = ({
   ctx,
   pos,
   prevMouseX,
@@ -33,7 +35,7 @@ export const drawCircle = ({
   ctx.fill();
 };
 
-export const drawTriangle = ({
+const drawTriangle = ({
   ctx,
   pos,
   prevMouseX,
@@ -52,7 +54,7 @@ export const drawTriangle = ({
   ctx.fill();
 };
 
-export const drawLine = ({
+const drawLine = ({
   ctx,
   pos,
   prevMouseX,
@@ -67,4 +69,15 @@ export const drawLine = ({
   ctx.moveTo(prevMouseX, prevMouseY);
   ctx.lineTo(pos.x, pos.y);
   ctx.stroke();
+};
+
+export const drawShape = (shape: Shape) => {
+  return shape
+    ? {
+        rectangle: drawRect,
+        circle: drawCircle,
+        triangle: drawTriangle,
+        line: drawLine,
+      }[shape]
+    : null;
 };

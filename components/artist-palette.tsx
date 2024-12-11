@@ -1,12 +1,5 @@
 import { Dispatch, SetStateAction, useState } from "react";
-import {
-  Paintbrush,
-  Eraser,
-  Square,
-  Circle,
-  Triangle,
-  Minus,
-} from "lucide-react";
+import { Trash2, BadgeCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import {
@@ -14,141 +7,63 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from "@/components/ui/popover";
-import { COLORS, DrawStyle, SHAPES, TOOLS } from "@/app/types/drawing-styles";
+import {
+  COLORS,
+  DrawStyle,
+  SHAPES,
+  TOOLS,
+  ToolShapeIconMap,
+} from "@/app/types/drawing-styles";
 import { cn } from "@/lib/utils";
 
-const IconMap = {
-  rectangle: <Square className="h-4 w-4 icon-standby" stroke="currentColor" />,
-  circle: <Circle className="h-4 w-4 icon-standby" stroke="currentColor" />,
-  triangle: <Triangle className="h-4 w-4 icon-standby" stroke="currentColor" />,
-  line: <Minus className="h-4 w-4 icon-standby" stroke="currentColor" />,
-  eraser: <Eraser className="h-4 w-4 icon-standby" stroke="currentColor" />,
-  pencil: <Paintbrush className="h-4 w-4 icon-standby" stroke="currentColor" />,
-};
-
-export function ArtistPalette({
-  drawStyle,
-  setDrawStyle,
-}: {
+type PaletteProps = {
   drawStyle: DrawStyle;
   setDrawStyle: Dispatch<SetStateAction<DrawStyle>>;
-}) {
-  const [popoverOpen, setPopoverOpen] = useState({
-    color: false,
-    tool: false,
-  });
+};
 
+const ColorPalette = ({ drawStyle, setDrawStyle }: PaletteProps) => {
+  const [popoverOpen, setPopoverOpen] = useState(false);
+  const togglePopover = () => setPopoverOpen(!popoverOpen);
   return (
-    <div className="rounded-full shimmer-button backdrop-blur-lg animate-border-loader shadow-lg p-1 flex items-center space-x-1 w-fit mx-auto">
-      <Popover
-        open={popoverOpen.tool}
-        onOpenChange={() =>
-          setPopoverOpen({ ...popoverOpen, tool: !popoverOpen.tool })
-        }
-      >
-        <PopoverTrigger asChild>
+    <Popover open={popoverOpen} onOpenChange={togglePopover}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="ghost"
+          className="size-11 p-0 rounded-full hover:bg-white/50"
+        >
+          <div
+            style={{
+              backgroundColor: drawStyle.color,
+              width: drawStyle.brushWidth,
+              height: drawStyle.brushWidth,
+            }}
+            className="rounded-full"
+          />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="grid grid-cols-4 gap-2 w-fit bg-ai-pink/20 backdrop-blur rounded-2xl border-ai-pink/10 shadow-ai-pink/70 shadow-2xl">
+        {COLORS.map((c) => (
           <Button
+            key={c}
             variant="ghost"
-            className="h-11 w-11 rounded-full hover:bg-white/50 [&_svg]:size-6"
-          >
-            {
-              IconMap[
-                [...TOOLS, ...SHAPES].find(
-                  (t) => drawStyle.tool === t || drawStyle.shape === t
-                ) || "pencil"
-              ]
-            }
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-auto bg-transparent backdrop-blur rounded-full border-ai-pink/10 shadow-ai-pink/70 shadow-2xl">
-          <div className="flex space-x-2">
-            {TOOLS.map((tool) => (
-              <Button
-                className={cn(
-                  "rounded-full hover:bg-white",
-                  tool === drawStyle.tool ? "bg-white" : "bg-white/30"
-                )}
-                key={tool}
-                size="icon"
-                onClick={() => {
-                  setDrawStyle({ ...drawStyle, tool, shape: null });
-                  setPopoverOpen({ ...popoverOpen, tool: false });
-                }}
-              >
-                {IconMap[tool]}
-              </Button>
-            ))}
-            {SHAPES.map((shape) => (
-              <Button
-                className={cn(
-                  "rounded-full hover:bg-white",
-                  shape === drawStyle.shape ? "bg-white" : "bg-white/30"
-                )}
-                key={shape}
-                size="icon"
-                onClick={() => {
-                  setDrawStyle({ ...drawStyle, shape, tool: null });
-                  setPopoverOpen({ ...popoverOpen, tool: false });
-                }}
-              >
-                {IconMap[shape]}
-              </Button>
-            ))}
-          </div>
-        </PopoverContent>
-      </Popover>
-
-      <Popover
-        open={popoverOpen.color}
-        onOpenChange={() =>
-          setPopoverOpen({ ...popoverOpen, color: !popoverOpen.color })
-        }
-      >
-        <PopoverTrigger asChild>
-          <Button
-            variant="ghost"
-            className="w-11 h-11 p-0 rounded-full hover:bg-white/50"
+            className="size-11 rounded-full p-0 hover:bg-white/50"
+            onClick={() => {
+              setDrawStyle({ ...drawStyle, color: c });
+              togglePopover();
+            }}
           >
             <div
               style={{
-                backgroundColor: drawStyle.color,
+                backgroundColor: c,
                 width: drawStyle.brushWidth,
                 height: drawStyle.brushWidth,
               }}
-              className="p-0 rounded-full border border-gray-300"
+              className="rounded-full"
             />
           </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-40 bg-transparent backdrop-blur rounded-2xl border-ai-pink/10 shadow-ai-pink/70 shadow-2xl">
-          <div className="grid grid-cols-4 gap-2">
-            {COLORS.map((c) => (
-              <button
-                key={c}
-                className="w-8 h-8 rounded-full border border-gray-100"
-                style={{ backgroundColor: c }}
-                onClick={() => {
-                  setDrawStyle({ ...drawStyle, color: c });
-                  setPopoverOpen({ ...popoverOpen, color: false });
-                }}
-              />
-            ))}
-            <Slider
-              className="col-span-4"
-              style={{ color: drawStyle.color }}
-              min={5}
-              max={40}
-              step={1}
-              value={[drawStyle.brushWidth]}
-              onValueChange={(value) =>
-                setDrawStyle({ ...drawStyle, brushWidth: value[0] })
-              }
-            />
-          </div>
-        </PopoverContent>
-      </Popover>
-
-      {/* <div className="w-40">
+        ))}
         <Slider
+          className="col-span-4 mt-2"
           style={{ color: drawStyle.color }}
           min={5}
           max={40}
@@ -158,7 +73,111 @@ export function ArtistPalette({
             setDrawStyle({ ...drawStyle, brushWidth: value[0] })
           }
         />
-      </div> */}
-    </div>
+      </PopoverContent>
+    </Popover>
+  );
+};
+
+const ToolPalette = ({ drawStyle, setDrawStyle }: PaletteProps) => {
+  const [popoverOpen, setPopoverOpen] = useState(false);
+  const togglePopover = () => setPopoverOpen(!popoverOpen);
+
+  const SelectedIcon =
+    ToolShapeIconMap[
+      [...TOOLS, ...SHAPES].find(
+        (t) => drawStyle.tool === t || drawStyle.shape === t
+      ) || "pencil"
+    ];
+
+  return (
+    <Popover open={popoverOpen} onOpenChange={togglePopover}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="ghost"
+          className="size-11 rounded-full hover:bg-white/50 [&_svg]:size-6"
+        >
+          <SelectedIcon stroke={drawStyle.color} />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto space-x-2 bg-ai-pink/20 backdrop-blur rounded-full border-ai-pink/10 shadow-ai-pink/70 shadow-2xl">
+        {TOOLS.map((tool) => {
+          const Icon = ToolShapeIconMap[tool];
+          return (
+            <Button
+              key={tool}
+              variant="ghost"
+              className={cn(
+                "size-11 rounded-full hover:bg-white [&_svg]:size-6",
+                tool === drawStyle.tool ? "bg-white" : "bg-white/30"
+              )}
+              onClick={() => {
+                setDrawStyle({ ...drawStyle, tool, shape: null });
+                togglePopover();
+              }}
+            >
+              <Icon stroke={drawStyle.color} />
+            </Button>
+          );
+        })}
+        {SHAPES.map((shape) => {
+          const Icon = ToolShapeIconMap[shape];
+          return (
+            <Button
+              key={shape}
+              variant="ghost"
+              className={cn(
+                "size-11 rounded-full hover:bg-white [&_svg]:size-6",
+                shape === drawStyle.shape ? "bg-white" : "bg-white/30"
+              )}
+              onClick={() => {
+                setDrawStyle({ ...drawStyle, shape, tool: null });
+                togglePopover();
+              }}
+            >
+              <Icon stroke={drawStyle.color} />
+            </Button>
+          );
+        })}
+      </PopoverContent>
+    </Popover>
+  );
+};
+
+export function ArtistPalette({
+  drawStyle,
+  setDrawStyle,
+  clearCanvas,
+  evaluateDrawing,
+}: {
+  drawStyle: DrawStyle;
+  setDrawStyle: Dispatch<SetStateAction<DrawStyle>>;
+  clearCanvas: () => void;
+  evaluateDrawing: () => void;
+}) {
+  const btnClass =
+    "aspect-square hover:scale-105 transition-transform w-fit shadow-md shadow-ai-pink/70 rounded-full shimmer-button backdrop-blur-lg animate-border-loader p-6 [&_svg]:size-6";
+  return (
+    <>
+      <Button
+        className={btnClass}
+        id="clear-canvas"
+        variant="ghost"
+        onClick={clearCanvas}
+      >
+        <Trash2 className="icon-standby" stroke="currentColor" />
+      </Button>
+      <div className="rounded-full shimmer-button backdrop-blur-lg animate-border-loader shadow-md shadow-ai-pink/70 p-1 flex items-center space-x-1 w-fit mx-auto">
+        <ToolPalette drawStyle={drawStyle} setDrawStyle={setDrawStyle} />
+        <ColorPalette drawStyle={drawStyle} setDrawStyle={setDrawStyle} />
+      </div>
+      <Button
+        className={cn(btnClass, "justify-self-end")}
+        id="submit"
+        variant="ghost"
+        onClick={evaluateDrawing}
+      >
+        <BadgeCheck className="icon-standby" stroke="currentColor" />
+      </Button>
+    </>
   );
 }

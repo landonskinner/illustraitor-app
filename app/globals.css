@@ -61,6 +61,8 @@
     --ai-blue: 129, 202, 227;
 
     --ai-orange: 247, 186, 94;
+
+    --header-height: 100px;
   }
   .dark {
     --background: 0 0% 3.9%;
@@ -333,16 +335,6 @@ button.unset {
   background-position-x: 400%;
 }
 
-.bouncing-loader > i {
-  width: 8px;
-  height: 8px;
-  margin: 16px 1px 0px;
-  border-radius: 50%;
-  background-color: #ea90fb;
-  opacity: 1;
-  animation: bouncing-loader 0.6s infinite alternate,
-    background-loader 3s infinite;
-}
 @keyframes background-loader {
   0% {
     background-color: rgb(var(--ai-blue));
@@ -365,12 +357,4 @@ button.unset {
   to {
     transform: translateY(-12px);
   }
-}
-
-.bouncing-loader > i:nth-child(2) {
-  animation-delay: 0.2s;
-}
-
-.bouncing-loader > i:nth-child(3) {
-  animation-delay: 0.4s;
 }

@@ -92,6 +92,12 @@ export default {
           },
         },
       },
+      height: {
+        header: "var(--header-height)",
+      },
+      spacing: {
+        header: "var(--header-height)",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],
