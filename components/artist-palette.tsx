@@ -15,6 +15,7 @@ import {
   PopoverContent,
 } from "@/components/ui/popover";
 import { COLORS, DrawStyle, SHAPES, TOOLS } from "@/app/types/drawing-styles";
+import { cn } from "@/lib/utils";
 
 const IconMap = {
   rectangle: <Square className="h-4 w-4 icon-standby" stroke="currentColor" />,
@@ -59,12 +60,15 @@ export function ArtistPalette({
             }
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto">
+        <PopoverContent className="w-auto bg-transparent backdrop-blur rounded-full border-ai-pink/10 shadow-ai-pink/70 shadow-2xl">
           <div className="flex space-x-2">
             {TOOLS.map((tool) => (
               <Button
+                className={cn(
+                  "rounded-full hover:bg-white",
+                  tool === drawStyle.tool ? "bg-white" : "bg-white/30"
+                )}
                 key={tool}
-                variant={drawStyle.tool === tool ? "default" : "outline"}
                 size="icon"
                 onClick={() => {
                   setDrawStyle({ ...drawStyle, tool, shape: null });
@@ -76,8 +80,11 @@ export function ArtistPalette({
             ))}
             {SHAPES.map((shape) => (
               <Button
+                className={cn(
+                  "rounded-full hover:bg-white",
+                  shape === drawStyle.shape ? "bg-white" : "bg-white/30"
+                )}
                 key={shape}
-                variant={drawStyle.shape === shape ? "default" : "outline"}
                 size="icon"
                 onClick={() => {
                   setDrawStyle({ ...drawStyle, shape, tool: null });
@@ -112,12 +119,12 @@ export function ArtistPalette({
             />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-40">
+        <PopoverContent className="w-40 bg-transparent backdrop-blur rounded-2xl border-ai-pink/10 shadow-ai-pink/70 shadow-2xl">
           <div className="grid grid-cols-4 gap-2">
             {COLORS.map((c) => (
               <button
                 key={c}
-                className="w-8 h-8 rounded-full border border-gray-300"
+                className="w-8 h-8 rounded-full border border-gray-100"
                 style={{ backgroundColor: c }}
                 onClick={() => {
                   setDrawStyle({ ...drawStyle, color: c });

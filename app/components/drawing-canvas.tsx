@@ -191,8 +191,8 @@ export default function Canvas() {
           }}
         >
           <div
-            className={`order-last px-4 grid grid-cols-[100px_1fr_100px] gap-x-4 jusify-between items-center text-white absolute w-full h-[100px] leading-[100px] -top-[100px] left-0 transition-opacity delay-1000 duration-300 ${
-              !!prompt ? "opacity-100" : "opacity-0"
+            className={`order-last px-4 grid grid-cols-[100px_1fr_100px] gap-x-4 justify-between items-center text-white absolute w-full h-[100px] leading-[100px] left-0 transition-[top_opacity] delay-1000 duration-300 ${
+              !!prompt ? "opacity-100 -top-[100px]" : "opacity-0 top-0"
             }`}
           >
             <div className="w-fit h-fit grid grid-cols-[1fr_auto] gap-x-4">
@@ -205,20 +205,19 @@ export default function Canvas() {
               <div>Current</div>
               <div className="font-bold">{score}</div>
             </div>
-            <div className="font-black text-4xl uppercase text-center">
+            <div className="font-black text-xl sm:text-4xl uppercase text-center">
               {prompt}
             </div>
-            <div className="text-3xl font-bold text-right">
+            <div className="text-xl sm:text-3xl font-bold text-right">
               {formatTime(time)}
             </div>
           </div>
-          <div className="overflow-hidden h-full rounded-[20px]">
+          <div className="overflow-hidden h-full rounded-b-2xl">
             {showCanvas ? (
               <>
                 {(isLoading || !gameInProgress) && !!time && (
                   <InteractiveCanvasOverlay
-                    className="rounded-b-2xl"
-                    isLoading={isLoading}
+                    className="rounded-b-xl"
                     isInteractive={!!generation}
                     onClick={() => {
                       if (!!generation) {
@@ -230,19 +229,29 @@ export default function Canvas() {
                     }}
                   >
                     {generation ? (
-                      <div className="text-center">
-                        <div className="text-8xl">{generation.grade}</div>
-                        <div className="text-2xl">{generation.comment}</div>
-                        <div className="text-2xl">Click to draw again</div>
+                      <div className="text-center space-y-4">
+                        <div className="text-9xl">{generation.grade}</div>
+                        <div className="text-2xl text-ai-pink/70">
+                          {generation.comment}
+                        </div>
+                        <div className="text-sm text-ai-pink/70">
+                          Click to draw again
+                        </div>
                       </div>
                     ) : (
-                      "Analyzing..."
+                      <div className="flex">
+                        Analyzing
+                        <div className="bouncing-loader flex items-center justify-end">
+                          <i />
+                          <i />
+                          <i />
+                        </div>
+                      </div>
                     )}
                   </InteractiveCanvasOverlay>
                 )}
                 {!time && (
                   <InteractiveCanvasOverlay
-                    isLoading={false}
                     isInteractive={true}
                     onClick={() => {
                       resetTimer();
@@ -251,9 +260,15 @@ export default function Canvas() {
                       setShowCanvas(false);
                     }}
                   >
-                    <div>
-                      Time&apos;s up! You&apos;ve received {score} passing grade
-                      {score === 1 ? "" : "s"}!
+                    <div className="space-y-4">
+                      <div className="text-5xl">Time&apos;s up!</div>
+                      <div>
+                        You&apos;ve received {score} passing grade
+                        {score === 1 ? "" : "s"}!
+                      </div>
+                      <div className="text-sm text-ai-pink/70">
+                        Click to play again
+                      </div>
                     </div>
                   </InteractiveCanvasOverlay>
                 )}

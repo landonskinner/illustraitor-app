@@ -2,11 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  /* background-color: var(--background); */
-  /* color: var(--foreground); */
-}
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -58,6 +53,14 @@ body {
     --chart-5: 27 87% 67%;
 
     --radius: 0.5rem;
+
+    --ai-pink: 234, 144, 251;
+
+    --ai-purple: 205, 120, 255;
+
+    --ai-blue: 129, 202, 227;
+
+    --ai-orange: 247, 186, 94;
   }
   .dark {
     --background: 0 0% 3.9%;
@@ -114,20 +117,69 @@ body {
   * {
     @apply border-border;
   }
-  body {
-    @apply bg-background text-foreground;
-  }
+}
+
+.ready-button {
+  background-image: linear-gradient(
+    90deg,
+    rgb(var(--ai-pink)) 0%,
+    rgb(var(--ai-pink)) 50%,
+    rgb(var(--ai-orange)) 67%,
+    rgb(var(--ai-purple)) 84%,
+    rgb(var(--ai-blue)) 100%
+  );
+  background-size: 200%;
+}
+
+.easy-button {
+  background-image: linear-gradient(
+    90deg,
+    rgb(var(--ai-blue)) 0%,
+    rgb(var(--ai-blue)) 50%,
+    rgb(var(--ai-purple)) 67%,
+    rgb(var(--ai-pink)) 84%,
+    rgb(var(--ai-orange)) 100%
+  );
+  background-size: 200%;
+}
+
+.medium-button {
+  background-image: linear-gradient(
+    90deg,
+    rgb(var(--ai-orange)) 0%,
+    rgb(var(--ai-orange)) 50%,
+    rgb(var(--ai-pink)) 67%,
+    rgb(var(--ai-purple)) 84%,
+    rgb(var(--ai-blue)) 100%
+  );
+  background-size: 200%;
+}
+
+.hard-button {
+  background-image: linear-gradient(
+    90deg,
+    rgb(var(--ai-purple)) 0%,
+    rgb(var(--ai-purple)) 50%,
+    rgb(var(--ai-blue)) 67%,
+    rgb(var(--ai-pink)) 84%,
+    rgb(var(--ai-orange)) 100%
+  );
+  background-size: 200%;
 }
 
 .shimmer-border {
   background: linear-gradient(white, white) padding-box,
     linear-gradient(
-        45deg,
-        #ea90fb 20%,
-        #81cae3 35%,
-        #ffdab9 50%,
-        #ffb6c1 65%,
-        #ea90fb 80%
+        90deg,
+        rgb(var(--ai-blue), 0.6) 0%,
+        rgb(var(--ai-blue), 0.6) 10%,
+        rgb(var(--ai-purple), 0.6) 25%,
+        rgb(var(--ai-pink), 0.6) 40%,
+        rgb(var(--ai-orange), 0.6) 50%,
+        rgb(var(--ai-pink), 0.6) 60%,
+        rgb(var(--ai-purple), 0.6) 75%,
+        rgb(var(--ai-blue), 0.6) 90%,
+        rgb(var(--ai-blue), 0.6) 100%
       )
       border-box;
   border: 4px solid transparent;
@@ -142,12 +194,16 @@ body {
       )
       padding-box,
     linear-gradient(
-        45deg,
-        #ea90fb 20%,
-        #81cae3 35%,
-        #ffdab9 50%,
-        #ffb6c1 65%,
-        #ea90fb 80%
+        90deg,
+        rgb(var(--ai-blue), 0.6) 0%,
+        rgb(var(--ai-blue), 0.6) 10%,
+        rgb(var(--ai-purple), 0.6) 25%,
+        rgb(var(--ai-pink), 0.6) 40%,
+        rgb(var(--ai-orange), 0.6) 50%,
+        rgb(var(--ai-pink), 0.6) 60%,
+        rgb(var(--ai-purple), 0.6) 75%,
+        rgb(var(--ai-blue), 0.6) 90%,
+        rgb(var(--ai-blue), 0.6) 100%
       )
       border-box;
   border: 4px solid transparent;
@@ -162,26 +218,42 @@ body {
 
 @keyframes iconStandby {
   0% {
-    color: #ea90fb;
+    color: rgb(var(--ai-blue), 0.6);
   }
-  20% {
-    color: #ea90fb;
+  10% {
+    color: rgb(var(--ai-blue), 0.6);
   }
-  35% {
-    color: #81cae3;
+  25% {
+    color: rgb(var(--ai-purple), 0.6);
+  }
+  40% {
+    color: rgb(var(--ai-pink), 0.6);
   }
   50% {
-    color: #ffdab9;
+    color: rgb(var(--ai-orange), 0.6);
   }
-  65% {
-    color: #ffb6c1;
+  60% {
+    color: rgb(var(--ai-pink), 0.6);
   }
-  80% {
-    color: #ea90fb;
+  75% {
+    color: rgb(var(--ai-purple), 0.6);
+  }
+  90% {
+    color: rgb(var(--ai-blue), 0.6);
   }
   100% {
-    color: #ea90fb;
+    color: rgb(var(--ai-blue), 0.6);
   }
+}
+
+button.unset {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
 }
 
 .thick-border {
@@ -223,37 +295,82 @@ body {
   }
 }
 
+.overlay-loading {
+  background: linear-gradient(
+        90deg,
+        rgb(var(--ai-blue)) 0%,
+        rgb(var(--ai-blue)) 10%,
+        rgb(var(--ai-purple)) 25%,
+        rgb(var(--ai-pink)) 40%,
+        rgb(var(--ai-orange)) 50%,
+        rgb(var(--ai-pink)) 60%,
+        rgb(var(--ai-purple)) 75%,
+        rgb(var(--ai-blue)) 90%,
+        rgb(var(--ai-blue)) 100%
+      )
+      text,
+    linear-gradient(rgba(134, 134, 134, 0.2), rgba(134, 134, 134, 0.2))
+      border-box;
+  background-size: 400%;
+  background-position-x: 400%;
+}
+
 .text-loading {
   background: linear-gradient(
-      45deg,
-      #ea90fb 20%,
-      #81cae3 35%,
-      #ffdab9 50%,
-      #ffb6c1 65%,
-      #ea90fb 80%
+      90deg,
+      rgb(var(--ai-blue), 0.6) 0%,
+      rgb(var(--ai-blue), 0.6) 10%,
+      rgb(var(--ai-purple), 0.6) 25%,
+      rgb(var(--ai-pink), 0.6) 40%,
+      rgb(var(--ai-orange), 0.6) 50%,
+      rgb(var(--ai-pink), 0.6) 60%,
+      rgb(var(--ai-purple), 0.6) 75%,
+      rgb(var(--ai-blue), 0.6) 90%,
+      rgb(var(--ai-blue), 0.6) 100%
     )
     text;
   background-size: 400%;
   background-position-x: 400%;
 }
 
-/* .border-test:hover {
-  /* border-image: linear-gradient(
-      90deg,
-      #81cae3 0%,
-      #ffdab9 25%,
-      #ffb6c1 50%,
-      #ea90fb 75%,
-      #81cae3 100%
-    )
-    1;
-  border-radius: 5px; this doesn't work */
-/* border-width: 4px; */
-/* border-style: solid; */
-/* padding: 5px; */
-/* transform: scale(1.02); */
-/* background-position-x: 100%; */
-/* border-width: 8px; */
-/* border-radius: 12px;
-  border: 4px solid transparent; */
-/* } */
+.bouncing-loader > i {
+  width: 8px;
+  height: 8px;
+  margin: 16px 1px 0px;
+  border-radius: 50%;
+  background-color: #ea90fb;
+  opacity: 1;
+  animation: bouncing-loader 0.6s infinite alternate,
+    background-loader 3s infinite;
+}
+@keyframes background-loader {
+  0% {
+    background-color: rgb(var(--ai-blue));
+  }
+  25% {
+    background-color: rgb(var(--ai-purple));
+  }
+  50% {
+    background-color: rgb(var(--ai-pink));
+  }
+  75% {
+    background-color: rgb(var(--ai-orange));
+  }
+  100% {
+    background-color: rgb(var(--ai-blue));
+  }
+}
+
+@keyframes bouncing-loader {
+  to {
+    transform: translateY(-12px);
+  }
+}
+
+.bouncing-loader > i:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.bouncing-loader > i:nth-child(3) {
+  animation-delay: 0.4s;
+}

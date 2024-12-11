@@ -13,6 +13,7 @@ export default {
         shimmer: "shimmer 1s infinite linear",
         "rainbow-wheel": "rainbow-wheel 60s infinite linear",
         "border-loader": "border-loader 30s infinite linear",
+        "text-loader": "text-loader 8s infinite linear",
       },
       colors: {
         background: "hsl(var(--background))",
@@ -55,6 +56,10 @@ export default {
           "4": "hsl(var(--chart-4))",
           "5": "hsl(var(--chart-5))",
         },
+        "ai-pink": "rgba(var(--ai-pink), <alpha-value>)",
+        "ai-purple": "rgba(var(--ai-purple), <alpha-value>)",
+        "ai-blue": "rgba(var(--ai-blue), <alpha-value>)",
+        "ai-orange": "rgba(var(--ai-orange), <alpha-value>)",
       },
       fontFamily: {
         nunito: "var(--font-nunito)",
@@ -79,6 +84,11 @@ export default {
         "border-loader": {
           "100%": {
             backgroundPositionX: "0px",
+          },
+        },
+        "text-loader": {
+          "100%": {
+            backgroundPositionX: "0%",
           },
         },
       },
