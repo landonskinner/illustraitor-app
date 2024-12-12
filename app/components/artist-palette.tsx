@@ -30,6 +30,7 @@ const ColorPalette = ({ drawStyle, setDrawStyle }: PaletteProps) => {
         <Button
           variant="ghost"
           className="size-11 p-0 rounded-full hover:bg-white/50"
+          data-testid="color-palette-trigger"
         >
           <div
             style={{
@@ -41,7 +42,10 @@ const ColorPalette = ({ drawStyle, setDrawStyle }: PaletteProps) => {
           />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="grid grid-cols-4 gap-2 w-fit bg-ai-pink/20 backdrop-blur rounded-2xl border-ai-pink/10 shadow-ai-pink/70 shadow-2xl">
+      <PopoverContent
+        className="grid grid-cols-4 gap-2 w-fit bg-ai-pink/20 backdrop-blur rounded-2xl border-ai-pink/10 shadow-ai-pink/70 shadow-2xl"
+        data-testid="color-palette-content"
+      >
         {COLORS.map((c) => (
           <Button
             key={c}
@@ -51,6 +55,7 @@ const ColorPalette = ({ drawStyle, setDrawStyle }: PaletteProps) => {
               setDrawStyle({ ...drawStyle, color: c });
               togglePopover();
             }}
+            data-testid={`color-button-${c}`}
           >
             <div
               style={{
@@ -72,6 +77,7 @@ const ColorPalette = ({ drawStyle, setDrawStyle }: PaletteProps) => {
           onValueChange={(value) =>
             setDrawStyle({ ...drawStyle, brushWidth: value[0] })
           }
+          data-testid="brush-width-slider"
         />
       </PopoverContent>
     </Popover>
@@ -95,11 +101,15 @@ const ToolPalette = ({ drawStyle, setDrawStyle }: PaletteProps) => {
         <Button
           variant="ghost"
           className="size-11 rounded-full hover:bg-white/50 [&_svg]:size-6"
+          data-testid="tool-palette-trigger"
         >
           <SelectedIcon stroke={drawStyle.color} />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto space-x-2 bg-ai-pink/20 backdrop-blur rounded-full border-ai-pink/10 shadow-ai-pink/70 shadow-2xl">
+      <PopoverContent
+        className="w-auto space-x-2 bg-ai-pink/20 backdrop-blur rounded-full border-ai-pink/10 shadow-ai-pink/70 shadow-2xl"
+        data-testid="tool-palette-content"
+      >
         {TOOLS.map((tool) => {
           const Icon = ToolShapeIconMap[tool];
           return (
@@ -114,6 +124,7 @@ const ToolPalette = ({ drawStyle, setDrawStyle }: PaletteProps) => {
                 setDrawStyle({ ...drawStyle, tool, shape: null });
                 togglePopover();
               }}
+              data-testid={`tool-button-${tool}`}
             >
               <Icon stroke={drawStyle.color} />
             </Button>
@@ -133,6 +144,7 @@ const ToolPalette = ({ drawStyle, setDrawStyle }: PaletteProps) => {
                 setDrawStyle({ ...drawStyle, shape, tool: null });
                 togglePopover();
               }}
+              data-testid={`shape-button-${shape}`}
             >
               <Icon stroke={drawStyle.color} />
             </Button>
@@ -159,10 +171,12 @@ export function ArtistPalette({
   return (
     <div className="w-full grid grid-cols-[80px_1fr_80px] sm:grid-cols-[120px_1fr_120px] items-center justify-between">
       <Button
+        name="clear-canvas"
         className={btnClass}
         id="clear-canvas"
         variant="ghost"
         onClick={clearCanvas}
+        data-testid="clear-canvas-button"
       >
         <Trash2 className="icon-standby" stroke="currentColor" />
       </Button>
@@ -171,10 +185,12 @@ export function ArtistPalette({
         <ColorPalette drawStyle={drawStyle} setDrawStyle={setDrawStyle} />
       </div>
       <Button
+        name="submit"
         className={cn(btnClass, "justify-self-end")}
         id="submit"
         variant="ghost"
         onClick={evaluateDrawing}
+        data-testid="submit-button"
       >
         <BadgeCheck className="icon-standby" stroke="currentColor" />
       </Button>
