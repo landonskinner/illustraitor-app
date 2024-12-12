@@ -1,27 +1,22 @@
-import { cn } from "@/lib/utils";
+import { useEffect, useState } from "react";
 
 type GameHeaderProps = {
-  showHeader: boolean;
   prompt: string;
-  highScore?: number;
   score: number;
   time: string;
 };
 
-const GameHeader = ({
-  showHeader,
-  prompt,
-  highScore = 0,
-  score,
-  time,
-}: GameHeaderProps) => {
+const GameHeader = ({ prompt, score, time }: GameHeaderProps) => {
+  const [highScore, setHighScore] = useState(0);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const localHighScore = localStorage.getItem("highScore");
+    setHighScore(localHighScore ? parseInt(localHighScore) : 0);
+  }, []);
+
   return (
-    <header
-      className={cn(
-        "absolute px-2 sm:px-4 grid grid-cols-[85px_1fr_85px] font-bold gap-x-4 items-center text-white w-full h-header transition-[top_opacity] delay-1000 duration-300",
-        showHeader ? "opacity-100 -top-header" : "opacity-0 top-0"
-      )}
-    >
+    <header className="absolute opacity-0 animate-fade-in -top-header overflow-hidden px-2 sm:px-4 grid grid-cols-[85px_1fr_85px] font-bold gap-x-4  h-header items-center text-white w-full">
       <section className="grid grid-cols-2 items-center gap-x-2 sm:gap-x-4">
         {!!highScore && (
           <>

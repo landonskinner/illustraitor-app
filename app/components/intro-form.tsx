@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DIFFICULTIES, Difficulty } from "../types/difficulty";
 import DifficultyButton from "./difficulty-button";
 import Logo from "./logo";
@@ -6,7 +6,7 @@ import Logo from "./logo";
 const Step1 = ({ handleClick }: { handleClick: () => void }) => {
   return (
     <button
-      className="unset h-full flex flex-col items-center justify-center space-y-4 row-span-3 self-center hover:cursor-pointer text-center"
+      className="h-full flex flex-col items-center justify-center space-y-4 row-span-3 self-center hover:cursor-pointer text-center"
       onClick={handleClick}
     >
       <Logo className="scale-[1.75] sm:scale-[2.5]" />
@@ -60,15 +60,23 @@ const Step3 = ({
   ));
 
 const IntroForm = ({
-  showFirstStep,
   startGame,
 }: {
-  showFirstStep: boolean;
   startGame: (difficulty: Difficulty) => void;
 }) => {
-  const [currentStep, setCurrentStep] = useState(showFirstStep ? 0 : 2);
+  const [currentStep, setCurrentStep] = useState(0);
+  const [hasReadRules, setHasReadRules] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    setHasReadRules(!!localStorage.getItem("highScore"));
+  }, []);
+
   const handleClick = () => setCurrentStep(currentStep + 1);
+
   const formSteps = [Step1, Step2, Step3];
+  if (hasReadRules) formSteps.splice(1, 1);
+
   const FormStep = formSteps[currentStep];
   return (
     <div className="p-4 grid grid-rows-3 gap-y-2 w-full h-full">

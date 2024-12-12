@@ -1,12 +1,12 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import { Trash2, BadgeCheck } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Slider } from "@/components/ui/slider";
+import { Button } from "@/app/components/ui/button";
+import { Slider } from "@/app/components/ui/slider";
 import {
   Popover,
   PopoverTrigger,
   PopoverContent,
-} from "@/components/ui/popover";
+} from "@/app/components/ui/popover";
 import {
   COLORS,
   DrawStyle,
@@ -157,7 +157,7 @@ export function ArtistPalette({
   const btnClass =
     "aspect-square hover:scale-105 transition-transform w-fit shadow-md shadow-ai-pink/70 rounded-full shimmer-button backdrop-blur-lg animate-border-loader p-6 [&_svg]:size-6";
   return (
-    <>
+    <div className="w-full grid grid-cols-[80px_1fr_80px] sm:grid-cols-[120px_1fr_120px] items-center justify-between">
       <Button
         className={btnClass}
         id="clear-canvas"
@@ -178,6 +178,6 @@ export function ArtistPalette({
       >
         <BadgeCheck className="icon-standby" stroke="currentColor" />
       </Button>
-    </>
+    </div>
   );
 }

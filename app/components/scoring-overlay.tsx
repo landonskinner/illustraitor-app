@@ -1,24 +1,22 @@
+import { Grading } from "../types/grading";
 import InteractiveCanvasOverlay from "./canvas-overlay";
 
 type ScoringOverlayProps = {
-  generation: {
-    grade: string;
-    comment: string;
-  } | null;
+  grading: Grading | null;
   onClick: () => void;
 };
 
-const ScoringOverlay = ({ generation, onClick }: ScoringOverlayProps) => {
+const ScoringOverlay = ({ grading, onClick }: ScoringOverlayProps) => {
   return (
     <InteractiveCanvasOverlay
       className="rounded-b-xl"
-      isInteractive={!!generation}
+      isInteractive={!!grading}
       onClick={onClick}
     >
-      {generation ? (
+      {grading ? (
         <>
-          <h3 className="text-9xl">{generation.grade}</h3>
-          <p className="text-2xl text-ai-pink/70">{generation.comment}</p>
+          <h3 className="text-9xl">{grading.grade}</h3>
+          <p className="text-2xl text-ai-pink/70">{grading.comment}</p>
           <p className="text-sm text-ai-pink/70">Click to draw again</p>
         </>
       ) : (

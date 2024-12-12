@@ -14,6 +14,7 @@ export default {
         "rainbow-wheel": "rainbow-wheel 60s infinite linear",
         "border-loader": "border-loader 30s infinite linear",
         "text-loader": "text-loader 8s infinite linear",
+        "fade-in": "fade-in 0.5s forwards 1000ms",
       },
       colors: {
         background: "hsl(var(--background))",
@@ -89,6 +90,11 @@ export default {
         "text-loader": {
           "100%": {
             backgroundPositionX: "0%",
+          },
+        },
+        "fade-in": {
+          "100%": {
+            opacity: "1",
           },
         },
       },

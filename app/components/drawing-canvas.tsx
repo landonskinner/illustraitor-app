@@ -7,10 +7,10 @@ import {
   MEDIUM_PROMPTS,
 } from "@/app/data/image-prompts";
 import { drawShape } from "../utils/draw-shapes";
-import { COLORS, DrawStyle } from "../types/drawing-styles";
-import { ArtistPalette } from "@/components/artist-palette";
+import { DEFAULT_DRAW_STYLE, DrawStyle } from "../types/drawing-styles";
+import { ArtistPalette } from "@/app/components/artist-palette";
 import IntroForm from "./intro-form";
-import { Difficulty } from "../types/difficulty";
+import { DIFFICULTIES, Difficulty } from "../types/difficulty";
 import { useCountdown } from "../utils/use-countdown";
 import Logo from "./logo";
 import { EvaluateDrawing } from "../utils/evaluate-drawing";
@@ -18,13 +18,8 @@ import GameOverOverlay from "./game-over-overlay";
 import ScoringOverlay from "./scoring-overlay";
 import GameHeader from "./game-header";
 import { cn } from "@/lib/utils";
-
-enum GameState {
-  Finished = "finished",
-  Evaluation = "evaluation",
-  Active = "active",
-  Inactive = "inactive",
-}
+import { Grading } from "../types/grading";
+import { GameState } from "../types/game-state";
 
 const getCanvasContext = (canvasRef: React.RefObject<HTMLCanvasElement>) => {
   const canvas = canvasRef.current;
@@ -40,38 +35,37 @@ const getTouchPos = (canvas: HTMLCanvasElement, touchEvent: TouchEvent) => {
   };
 };
 
-const getHighScore = () => {
-  if (typeof window === "undefined") return 0;
-  return Number(window?.localStorage.getItem("highScore")) || 0;
+const randomizePrompt = (prompts: string[], usedPrompts: string[]) => {
+  let prompt = prompts[Math.floor(Math.random() * prompts.length)];
+  while (usedPrompts.includes(prompt)) {
+    prompt = prompts[Math.floor(Math.random() * prompts.length)];
+  }
+  usedPrompts.push(prompt);
+  return prompt;
 };
 
 export default function Canvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const prevMouseRef = useRef({ x: 0, y: 0 });
+  const usedPrompts = useRef<string[]>([]);
+
   const [isDrawing, setIsDrawing] = useState(false);
-  const [drawStyle, setDrawStyle] = useState<DrawStyle>({
-    tool: "pencil",
-    brushWidth: 20,
-    color: COLORS[0],
-    shape: null,
-  });
+  const [drawStyle, setDrawStyle] = useState<DrawStyle>(DEFAULT_DRAW_STYLE);
   const [snapshot, setSnapshot] = useState<ImageData | null>(null);
   const [showCanvas, setShowCanvas] = useState(false);
   const [prompt, setPrompt] = useState("");
-  const [generation, setGeneration] = useState<{
-    grade: string;
-    comment: string;
-  } | null>(null);
+  const [grading, setGrading] = useState<Grading | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [difficulty, setDifficulty] = useState("easy");
+  const [difficulty, setDifficulty] = useState<Difficulty>(DIFFICULTIES[0]);
   const [score, setScore] = useState(0);
+
   const { time, toggleTimer, isRunning, resetTimer, formattedTime } =
     useCountdown(60);
 
   const gameState: GameState = (() => {
     if (!time) {
       return GameState.Finished;
-    } else if (isLoading || generation) {
+    } else if (isLoading || grading) {
       return GameState.Evaluation;
     } else return showCanvas ? GameState.Active : GameState.Inactive;
   })();
@@ -100,22 +94,12 @@ export default function Canvas() {
     }
   }, [showCanvas]);
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (gameState === GameState.Finished) {
-      const highScore = getHighScore();
-      if (score > highScore) {
-        window?.localStorage.setItem("highScore", String(score));
-      }
-    }
-  }, [gameState]);
-
   const handleMouseUp = () => setIsDrawing(false);
 
   const resetGame = () => {
-    setGeneration(null);
+    setGrading(null);
     clearCanvas();
-    setPrompt(prompts[Math.floor(Math.random() * prompts.length)]);
+    setPrompt(randomizePrompt(prompts, usedPrompts.current));
   };
 
   const startDraw = (
@@ -183,10 +167,10 @@ export default function Canvas() {
     if (canvas) {
       const { grade, comment } = await EvaluateDrawing({ prompt, canvas });
       if (grade && comment) {
-        setGeneration({ grade, comment });
+        setGrading({ grade, comment });
         if (grade !== "F") setScore(score + 1);
       } else {
-        setGeneration({
+        setGrading({
           grade: "Oops!",
           comment: "Your teacher is out. Try again later!",
         });
@@ -199,30 +183,31 @@ export default function Canvas() {
     gameState === GameState.Active || gameState === GameState.Evaluation;
 
   return (
-    <div className="m-auto w-full h-fit grid gap-y-4 grid-rows-[60px_1fr_60px] max-w-[500px]">
-      <Logo className={showCanvas ? "" : "opacity-0"} />
+    <div
+      className={cn(
+        "m-auto w-full grid gap-y-4 grid-rows-[60px_500px_60px] max-w-[500px]",
+        !showHeader && "items-center"
+      )}
+    >
+      {showHeader && <Logo />}
       <div
         className={cn(
           "relative h-[500px] w-full shimmer-border rounded-2xl animate-border-loader shadow-lg shadow-ai-pink/50",
-          showHeader ? "thick-border" : "overflow-hidden"
+          showHeader ? "thick-border" : "overflow-hidden row-span-3"
         )}
         style={{
           transitionProperty: "border-top-width",
           transitionDuration: "1500ms",
         }}
       >
-        <GameHeader
-          showHeader={showHeader}
-          prompt={prompt}
-          highScore={getHighScore()}
-          score={score}
-          time={formattedTime}
-        />
+        {showHeader && (
+          <GameHeader prompt={prompt} score={score} time={formattedTime} />
+        )}
         <div className="overflow-hidden h-full rounded-b-2xl">
           {showCanvas ? (
             <>
               {gameState === GameState.Evaluation && (
-                <ScoringOverlay generation={generation} onClick={resetGame} />
+                <ScoringOverlay grading={grading} onClick={resetGame} />
               )}
               {gameState === GameState.Finished && (
                 <GameOverOverlay
@@ -249,26 +234,23 @@ export default function Canvas() {
             </>
           ) : (
             <IntroForm
-              showFirstStep={!getHighScore()}
               startGame={(difficulty: Difficulty) => {
                 setDifficulty(difficulty);
-                setPrompt(prompts[Math.floor(Math.random() * prompts.length)]);
+                setPrompt(randomizePrompt(prompts, usedPrompts.current));
                 setShowCanvas(true);
               }}
             />
           )}
         </div>
       </div>
-      <div className="w-full grid grid-cols-[80px_1fr_80px] sm:grid-cols-[120px_1fr_120px] items-center justify-between">
-        {gameState === GameState.Active ? (
-          <ArtistPalette
-            setDrawStyle={setDrawStyle}
-            drawStyle={drawStyle}
-            clearCanvas={clearCanvas}
-            evaluateDrawing={evaluateDrawing}
-          />
-        ) : null}
-      </div>
+      {gameState === GameState.Active && (
+        <ArtistPalette
+          setDrawStyle={setDrawStyle}
+          drawStyle={drawStyle}
+          clearCanvas={clearCanvas}
+          evaluateDrawing={evaluateDrawing}
+        />
+      )}
     </div>
   );
 }

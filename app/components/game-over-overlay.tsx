@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import InteractiveCanvasOverlay from "./canvas-overlay";
 
 type GameOverOverlayProps = {
@@ -7,6 +8,15 @@ type GameOverOverlayProps = {
 
 const GameOverOverlay = ({ score, onClick }: GameOverOverlayProps) => {
   const isSingular = score === 1;
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const highScore = localStorage.getItem("highScore") || "0";
+    if (score > parseInt(highScore)) {
+      localStorage.setItem("highScore", score.toString());
+    }
+  }, [score]);
+
   return (
     <InteractiveCanvasOverlay isInteractive onClick={onClick}>
       <h3 className="text-5xl">Time&apos;s up!</h3>
