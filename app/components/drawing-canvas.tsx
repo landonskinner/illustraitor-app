@@ -60,7 +60,7 @@ export default function Canvas() {
   const [score, setScore] = useState(0);
 
   const { time, toggleTimer, isRunning, resetTimer, formattedTime } =
-    useCountdown(60);
+    useCountdown(5);
 
   const gameState: GameState = (() => {
     if (!time) {
@@ -190,20 +190,20 @@ export default function Canvas() {
       )}
     >
       {showHeader && <Logo />}
-      <div
-        className={cn(
-          "relative h-[500px] w-full shimmer-border rounded-2xl animate-border-loader shadow-lg shadow-ai-pink/50",
-          showHeader ? "thick-border" : "overflow-hidden row-span-3"
-        )}
-        style={{
-          transitionProperty: "border-top-width",
-          transitionDuration: "1500ms",
-        }}
-      >
+      <div className={cn("relative", !showHeader && "row-span-3")}>
         {showHeader && (
           <GameHeader prompt={prompt} score={score} time={formattedTime} />
         )}
-        <div className="overflow-hidden h-full rounded-b-2xl">
+        <div
+          className={cn(
+            "h-[500px] overflow-hidden w-full shimmer-border rounded-2xl animate-border-loader shadow-lg shadow-ai-pink/50 ",
+            showHeader && "thick-border"
+          )}
+          style={{
+            transitionProperty: "border-top-width",
+            transitionDuration: "1500ms",
+          }}
+        >
           {showCanvas ? (
             <>
               {gameState === GameState.Evaluation && (

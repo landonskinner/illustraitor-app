@@ -18,7 +18,11 @@ const GameOverOverlay = ({ score, onClick }: GameOverOverlayProps) => {
   }, [score]);
 
   return (
-    <InteractiveCanvasOverlay isInteractive onClick={onClick}>
+    <InteractiveCanvasOverlay
+      isInteractive
+      onClick={onClick}
+      className="rounded-2xl"
+    >
       <h3 className="text-5xl">Time&apos;s up!</h3>
       <p className="text-2xl text-ai-pink/70">
         You&apos;ve received {score} passing {"grade" + (isSingular ? "" : "s")}

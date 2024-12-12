@@ -16,7 +16,7 @@ const GameHeader = ({ prompt, score, time }: GameHeaderProps) => {
   }, []);
 
   return (
-    <header className="absolute opacity-0 animate-fade-in -top-header overflow-hidden px-2 sm:px-4 grid grid-cols-[85px_1fr_85px] font-bold gap-x-4  h-header items-center text-white w-full">
+    <header className="absolute opacity-0 animate-fade-in top-0 overflow-hidden px-2 sm:px-4 grid grid-cols-[85px_1fr_85px] font-bold gap-x-4  h-header items-center text-white w-full">
       <section className="grid grid-cols-2 items-center gap-x-2 sm:gap-x-4">
         {!!highScore && (
           <>

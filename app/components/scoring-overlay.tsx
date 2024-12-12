@@ -9,7 +9,7 @@ type ScoringOverlayProps = {
 const ScoringOverlay = ({ grading, onClick }: ScoringOverlayProps) => {
   return (
     <InteractiveCanvasOverlay
-      className="rounded-b-xl"
+      className="rounded-b-xl h-[400px] mt-[100px]"
       isInteractive={!!grading}
       onClick={onClick}
     >
