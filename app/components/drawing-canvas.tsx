@@ -60,7 +60,7 @@ export default function Canvas() {
   const [score, setScore] = useState(0);
 
   const { time, toggleTimer, isRunning, resetTimer, formattedTime } =
-    useCountdown(5);
+    useCountdown(60);
 
   const gameState: GameState = (() => {
     if (!time) {
